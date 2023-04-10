@@ -1,4 +1,4 @@
-package com.example.gawex.Entity;
+package com.example.gawex.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
