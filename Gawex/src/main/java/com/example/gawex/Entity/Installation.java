@@ -9,7 +9,6 @@ import java.sql.Time;
 
 @Entity
 public class Installation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

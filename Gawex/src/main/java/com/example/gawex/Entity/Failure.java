@@ -10,7 +10,6 @@ import java.sql.Time;
 
 @Entity
 public class Failure {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
