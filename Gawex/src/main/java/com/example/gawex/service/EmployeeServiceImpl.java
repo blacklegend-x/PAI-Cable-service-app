@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+
     @Autowired
     EmployeeRepo employeeRepo;
 
@@ -22,6 +23,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return employeeList;
     }
+
 
     @Override
     public Employee getByLogin(String login) {
@@ -47,6 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         } else {
             return null;
         }
+
     }
 
     @Override
