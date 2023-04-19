@@ -5,6 +5,7 @@ import com.example.gawex.entity.Client;
 import com.example.gawex.entity.Failure;
 import com.example.gawex.entity.Installation;
 import com.example.gawex.service.ClientService;
+import com.example.gawex.service.InstallationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,11 +32,56 @@ public class ResCon {
     @Autowired
     ClientService clientService;
 
+    @Autowired
+    InstallationService installationService;
+
     public String isBuilding="nie";
+    public Date date;
+    public Time time;
+    public String typeInstallation;
+    public String typeFailure;
 
 
-//    @PostMapping("/Installation")
+    public void saveInstallation(String typeInstallation, Date date, Time time, String isBuilding, String contractNumber, String name, String surname, String buildingNumber, String flatNumber, String streetName, String numberPhone){
+        Installation installation = new Installation();
+        installation.setName(name);
+        installation.setSurname(surname);
+        installation.setTime(time);
+        installation.setDate(date);
+        installation.setTypeInstallation(typeInstallation);
+        installation.setIsBuilding(isBuilding);
+        installation.setContractNumber(contractNumber);
+        installation.setStreetName(streetName);
+        installation.setBuildingNumber(buildingNumber);
+        installation.setFlatNumber(flatNumber);
+        installation.setNumberPhone(numberPhone);
+        installation.setStatus("Przyjęto");
+        installationService.addInstallation(installation);
+    }
 
+    public void updateInstallation(String chosenInstallationId, String contractNumber, String name, String surname, String streetName, String buildingNumber, String flatNumber, String numberPhone, String typeInstallation, LocalTime time, LocalDate date, String isBuilding, String status) {
+        List<Installation> installationList = installationService.getAll();
+        Optional<Installation> installationOptional = installationList
+                .stream()
+                .filter(installation -> installation.getId().toString().equals(chosenInstallationId))
+                .findFirst();
+
+        Installation installation = installationOptional.orElse(null);
+        installation.setStatus(status);
+        installation.setContractNumber(contractNumber);
+        installation.setName(name);
+        installation.setSurname(surname);
+        installation.setStreetName(streetName);
+        installation.setBuildingNumber(buildingNumber);
+        installation.setFlatNumber(flatNumber);
+        installation.setTypeInstallation(typeInstallation);
+        installation.setDate(Date.valueOf(date));
+        installation.setTime(Time.valueOf(time));
+        installation.setIsBuilding(isBuilding);
+        installation.setNumberPhone(numberPhone);
+
+        installationService.addInstallation(installation);
+    }
 
     public void saveClient(String contractNumber, String name, String surname, String streetName, String buildingNumber, String flatNumber, String numberPhone, String email){
         Client client = new Client();

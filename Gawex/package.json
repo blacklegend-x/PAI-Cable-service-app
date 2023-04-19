@@ -115,6 +115,7 @@
     "glob": "7.2.3",
     "mkdirp": "1.0.4",
     "rollup-plugin-brotli": "3.1.0",
+    "rollup-plugin-terser": "^7.0.2",
     "strip-css-comments": "5.0.0",
     "transform-ast": "2.4.4",
     "typescript": "4.9.3",
@@ -248,7 +249,7 @@
       "workbox-core": "6.5.0",
       "workbox-precaching": "6.5.0"
     },
-    "hash": "50fec49d807b58ac2b3b720fb0fe68c2ac2296f8d1dabd0274d3a578dc382679"
+    "hash": "4196fdfd1ac0ecb9722ac8369ff61e61ceebed25a4cf49a9aac16de30e020e45"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
