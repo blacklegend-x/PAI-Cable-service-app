@@ -5,7 +5,9 @@ import com.example.gawex.entity.Client;
 import com.example.gawex.entity.Failure;
 import com.example.gawex.entity.Installation;
 import com.example.gawex.service.ClientService;
+import com.example.gawex.service.FailureService;
 import com.example.gawex.service.InstallationService;
+import com.example.gawex.service.TypeFailureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,12 +37,55 @@ public class ResCon {
     @Autowired
     InstallationService installationService;
 
+    @Autowired
+    FailureService failureService;
+
     public String isBuilding="nie";
     public Date date;
     public Time time;
     public String typeInstallation;
     public String typeFailure;
 
+    public void saveFailure(String typeFailure, Date date, Time time, String isBuilding, String contractNumber, String name, String surname, String buildingNumber, String flatNumber, String streetName, String numberPhone){
+        Failure failure=new Failure();
+        failure.setName(name);
+        failure.setSurname(surname);
+        failure.setTime(time);
+        failure.setDate(date);
+        failure.setTypeFailure(typeFailure);
+        failure.setIsBuilding(isBuilding);
+        failure.setContractNumber(contractNumber);
+        failure.setStreetName(streetName);
+        failure.setBuildingNumber(buildingNumber);
+        failure.setFlatNumber(flatNumber);
+        failure.setNumberPhone(numberPhone);
+        failure.setStatus("Przyjęto");
+        failureService.addFailure(failure);
+    }
+
+    public void updateFailure(String chosenFailureId, String contractNumber, String name, String surname, String streetName, String buildingNumber, String flatNumber, String numberPhone, String typeFailure, LocalTime time, LocalDate date, String isBuilding, String status) {
+        List<Failure> failureList = failureService.getAll();
+        Optional<Failure> failureOptional = failureList
+                .stream()
+                .filter(failure -> failure.getId().toString().equals(chosenFailureId))
+                .findFirst();
+
+        Failure failure = failureOptional.orElse(null);
+        failure.setStatus(status);
+        failure.setContractNumber(contractNumber);
+        failure.setName(name);
+        failure.setSurname(surname);
+        failure.setStreetName(streetName);
+        failure.setBuildingNumber(buildingNumber);
+        failure.setFlatNumber(flatNumber);
+        failure.setTypeFailure(typeFailure);
+        failure.setDate(Date.valueOf(date));
+        failure.setTime(Time.valueOf(time));
+        failure.setIsBuilding(isBuilding);
+        failure.setNumberPhone(numberPhone);
+
+        failureService.addFailure(failure);
+    }
 
     public void saveInstallation(String typeInstallation, Date date, Time time, String isBuilding, String contractNumber, String name, String surname, String buildingNumber, String flatNumber, String streetName, String numberPhone){
         Installation installation = new Installation();
