@@ -4,6 +4,7 @@ import com.example.gawex.controller.ResCon;
 import com.example.gawex.entity.Failure;
 import com.example.gawex.service.ClientService;
 import com.example.gawex.service.FailureService;
+import com.example.gawex.service.InstallationService;
 import com.example.gawex.service.TypeFailureService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -48,6 +49,9 @@ public class FailureUI extends VerticalLayout {
 
     @Autowired
     FailureService failureService;
+
+    @Autowired
+    InstallationService installationService;
 
 
     @PostConstruct
@@ -237,6 +241,12 @@ public class FailureUI extends VerticalLayout {
             if(contractNumberField.getValue().isEmpty() || nameField.getValue().isEmpty() || surnameField.getValue().isEmpty() || streetNameField.getValue().isEmpty() || buildingNumberField.getValue().isEmpty() || numberPhoneField.getValue().isEmpty() || typeFailureComboBox.isEmpty() || datePicker.isEmpty() || timePicker.isEmpty()){
                 Notification.show("Uzupełnij wszystkie pola obowiązkowe");
             }else if(!nameField.getValue().equals("") && !surnameField.getValue().equals("") && !contractNumberField.getValue().equals("") && !streetNameField.getValue().equals("") && !buildingNumberField.getValue().equals("") && !numberPhoneField.getValue().equals("") && !datePicker.getValue().toString().equals("") && !timePicker.getValue().toString().equals("") && !typeFailureComboBox.getValue().equals("")){
+
+
+                if (failureService.getByDateTime(Date.valueOf(datePicker.getValue()), Time.valueOf(timePicker.getValue())) != null || installationService.getByDateTime(Date.valueOf(datePicker.getValue()), Time.valueOf(timePicker.getValue())) != null){
+                    Notification.show("Wybierz inny termin");
+                    timePicker.clear();
+                }else {
                     resCon.date= Date.valueOf(datePicker.getValue());
                     resCon.time= Time.valueOf(timePicker.getValue());
                     resCon.typeFailure=typeFailureComboBox.getValue();
@@ -256,7 +266,7 @@ public class FailureUI extends VerticalLayout {
                     typeFailureComboBox.setValue("");
                 }
 
-
+            }
 
         });
 

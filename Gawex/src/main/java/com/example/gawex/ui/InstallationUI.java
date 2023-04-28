@@ -3,6 +3,7 @@ package com.example.gawex.ui;
 import com.example.gawex.controller.ResCon;
 import com.example.gawex.entity.Installation;
 import com.example.gawex.service.ClientService;
+import com.example.gawex.service.FailureService;
 import com.example.gawex.service.InstallationService;
 import com.example.gawex.service.TypeInstallationService;
 import com.vaadin.flow.component.UI;
@@ -48,6 +49,9 @@ public class InstallationUI extends VerticalLayout {
 
     @Autowired
     TypeInstallationService typeInstallationService;
+
+    @Autowired
+    FailureService failureService;
 
 
     @PostConstruct
@@ -232,6 +236,11 @@ public class InstallationUI extends VerticalLayout {
             if(contractNumberField.getValue().isEmpty() || nameField.getValue().isEmpty() || surnameField.getValue().isEmpty() || streetNameField.getValue().isEmpty() || buildingNumberField.getValue().isEmpty() || numberPhoneField.getValue().isEmpty() || typeInstallationComboBox.isEmpty() || datePicker.isEmpty() || timePicker.isEmpty()){
                 Notification.show("Uzupełnij wszystkie pola obowiązkowe");
             }else if(!nameField.getValue().equals("") && !surnameField.getValue().equals("") && !contractNumberField.getValue().equals("") && !streetNameField.getValue().equals("") && !buildingNumberField.getValue().equals("") && !numberPhoneField.getValue().equals("") && !datePicker.getValue().toString().equals("") && !timePicker.getValue().toString().equals("") && !typeInstallationComboBox.getValue().equals("")){
+
+                if (installationService.getByDateTime(Date.valueOf(datePicker.getValue()), Time.valueOf(timePicker.getValue())) != null || failureService.getByDateTime(Date.valueOf(datePicker.getValue()), Time.valueOf(timePicker.getValue())) != null){
+                    Notification.show("Wybierz inny termin");
+                    timePicker.clear();
+                }else{
                     resCon.date= Date.valueOf(datePicker.getValue());
                     resCon.time= Time.valueOf(timePicker.getValue());
                     resCon.typeInstallation=typeInstallationComboBox.getValue();
@@ -252,7 +261,7 @@ public class InstallationUI extends VerticalLayout {
                 }
 
 
-
+            }
 
         });
 
