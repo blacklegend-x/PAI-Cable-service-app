@@ -4,6 +4,7 @@ import com.example.gawex.controller.ResCon;
 import com.example.gawex.entity.Installation;
 import com.example.gawex.service.FailureService;
 import com.example.gawex.service.InstallationService;
+import com.example.gawex.service.LocalDateToSqlDateConverter;
 import com.example.gawex.service.TypeInstallationService;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
@@ -290,6 +291,11 @@ public class CalendarInstallationUI extends VerticalLayout {
         datePickerField.setClassName("datePicker");
         datePickerField.setI18n(new DatePicker.DatePickerI18n().setFirstDayOfWeek(1));
         datePickerField.setWidthFull();
+        binder.forField(datePickerField).withConverter(new LocalDateToSqlDateConverter())
+                .asRequired("Nie może być puste")
+                .withStatusLabel(dateValidationMessage)
+                .bind(Installation::getDate,Installation::setDate);
+        dateColumn.setEditorComponent(datePickerField);
 
 
         TimePicker timePickerField = new TimePicker();
