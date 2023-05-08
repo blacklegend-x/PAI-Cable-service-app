@@ -2,10 +2,7 @@ package com.example.gawex.ui;
 
 import com.example.gawex.controller.ResCon;
 import com.example.gawex.entity.Installation;
-import com.example.gawex.service.FailureService;
-import com.example.gawex.service.InstallationService;
-import com.example.gawex.service.LocalDateToSqlDateConverter;
-import com.example.gawex.service.TypeInstallationService;
+import com.example.gawex.service.*;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -304,6 +301,11 @@ public class CalendarInstallationUI extends VerticalLayout {
         timePickerField.setMinTime(LocalTime.of(8, 0));
         timePickerField.setMaxTime(LocalTime.of(16, 0));
         timePickerField.setWidthFull();
+        binder.forField(timePickerField).withConverter(new LocalTimeToSqlTimeConverter())
+                .asRequired("Nie może być puste")
+                .withStatusLabel(timeValidationMessage)
+                .bind(Installation::getTime,Installation::setTime);
+        timeColumn.setEditorComponent(timePickerField);
 
 
 
