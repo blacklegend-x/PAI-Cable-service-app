@@ -53,10 +53,22 @@
     background-color: transparent;
 }
 
+.buttonactive{
+    width: 20%;
+    height: 100%;
+    /*border: 2px midnightblue solid;*/
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    background-color: rgb(52, 149, 235);
+}
+
 .button:hover{
     text-decoration: underline;
     background-color: rgba(255,255,255,0.2);
 }
+
+
 
 /*koniec menu*/
 

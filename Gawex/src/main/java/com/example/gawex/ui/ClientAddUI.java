@@ -28,6 +28,9 @@ public class ClientAddUI extends VerticalLayout {
 
     @PostConstruct
     public void init(){
+
+        setSizeFull();
+
         if(LoginToken.token == 0){
             Notification.show("Zaloguj się!");
             LoginToken.token = 0;
@@ -120,14 +123,20 @@ public class ClientAddUI extends VerticalLayout {
 
         TextField contractNumberField = new TextField("Numer umowy");
         contractNumberField.setClassName("contractNumberField");
+//        contractNumberField.setRequiredIndicatorVisible(true);
+        contractNumberField.setHelperText("Obowiązkowe");
         contractNumberField.getElement().setAttribute("theme", Lumo.DARK);
 
         TextField nameField = new TextField("Imię");
         nameField.setClassName("nameField");
+//        nameField.setRequiredIndicatorVisible(true);
+        nameField.setHelperText("Obowiązkowe");
         nameField.getElement().setAttribute("theme", Lumo.DARK);
 
         TextField surnameField = new TextField("Nazwisko");
         surnameField.setClassName("surnameField");
+//        surnameField.setRequiredIndicatorVisible(true);
+        surnameField.setHelperText("Obowiązkowe");
         surnameField.getElement().setAttribute("theme", Lumo.DARK);
 
         horizontalAddDataLayout.add(contractNumberField,nameField,surnameField);
@@ -138,10 +147,14 @@ public class ClientAddUI extends VerticalLayout {
 
         TextField streetNameField = new TextField("Ulica");
         streetNameField.setClassName("streetNameField");
+        streetNameField.setHelperText("Obowiązkowe");
+//        streetNameField.setRequiredIndicatorVisible(true);
         streetNameField.getElement().setAttribute("theme", Lumo.DARK);
 
         TextField buildingNumberField = new TextField("Numer budynku");
-        buildingNumberField.setClassName("buildingNumberField");;
+        buildingNumberField.setClassName("buildingNumberField");
+//        buildingNumberField.setRequiredIndicatorVisible(true);
+        buildingNumberField.setHelperText("Obowiązkowe");
         buildingNumberField.getElement().setAttribute("theme", Lumo.DARK);
 
         TextField flatNumberField = new TextField("Numer lokalu");
@@ -156,6 +169,8 @@ public class ClientAddUI extends VerticalLayout {
 
         TextField numberPhoneField = new TextField("Numer telefonu");
         numberPhoneField.setClassName("numberPhoneField");
+//        numberPhoneField.setRequired(true);
+        numberPhoneField.setHelperText("Obowiązkowe");
         numberPhoneField.getElement().setAttribute("theme", Lumo.DARK);
 
         TextField emailField = new TextField("Email");

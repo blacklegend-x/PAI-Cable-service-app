@@ -9,6 +9,8 @@ import com.example.gawex.service.FailureService;
 import com.example.gawex.service.InstallationService;
 import com.example.gawex.service.TypeFailureService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Date;
@@ -46,7 +48,8 @@ public class ResCon {
     public String typeInstallation;
     public String typeFailure;
 
-    public void saveFailure(String typeFailure, Date date, Time time, String isBuilding, String contractNumber, String name, String surname, String buildingNumber, String flatNumber, String streetName, String numberPhone){
+    @PutMapping("/failure/{contractNumber}")
+    public void saveFailure(String typeFailure, Date date, Time time, String isBuilding, @PathVariable String contractNumber, String name, String surname, String buildingNumber, String flatNumber, String streetName, String numberPhone){
         Failure failure=new Failure();
         failure.setName(name);
         failure.setSurname(surname);
@@ -62,8 +65,8 @@ public class ResCon {
         failure.setStatus("Przyjęto");
         failureService.addFailure(failure);
     }
-
-    public void updateFailure(String chosenFailureId, String contractNumber, String name, String surname, String streetName, String buildingNumber, String flatNumber, String numberPhone, String typeFailure, LocalTime time, LocalDate date, String isBuilding, String status) {
+    @PutMapping("failure/update/{contractNumber}")
+    public void updateFailure(String chosenFailureId,@PathVariable String contractNumber, String name, String surname, String streetName, String buildingNumber, String flatNumber, String numberPhone, String typeFailure, LocalTime time, LocalDate date, String isBuilding, String status) {
         List<Failure> failureList = failureService.getAll();
         Optional<Failure> failureOptional = failureList
                 .stream()
@@ -87,7 +90,8 @@ public class ResCon {
         failureService.addFailure(failure);
     }
 
-    public void saveInstallation(String typeInstallation, Date date, Time time, String isBuilding, String contractNumber, String name, String surname, String buildingNumber, String flatNumber, String streetName, String numberPhone){
+    @PutMapping("/installation/{contractNumber}")
+    public void saveInstallation(String typeInstallation, Date date, Time time, String isBuilding, @PathVariable String contractNumber, String name, String surname, String buildingNumber, String flatNumber, String streetName, String numberPhone){
         Installation installation = new Installation();
         installation.setName(name);
         installation.setSurname(surname);
@@ -104,7 +108,8 @@ public class ResCon {
         installationService.addInstallation(installation);
     }
 
-    public void updateInstallation(String chosenInstallationId, String contractNumber, String name, String surname, String streetName, String buildingNumber, String flatNumber, String numberPhone, String typeInstallation, LocalTime time, LocalDate date, String isBuilding, String status) {
+    @PutMapping("installation/update/{contractNumber}")
+    public void updateInstallation(String chosenInstallationId, @PathVariable String contractNumber, String name, String surname, String streetName, String buildingNumber, String flatNumber, String numberPhone, String typeInstallation, LocalTime time, LocalDate date, String isBuilding, String status) {
         List<Installation> installationList = installationService.getAll();
         Optional<Installation> installationOptional = installationList
                 .stream()
@@ -128,6 +133,7 @@ public class ResCon {
         installationService.addInstallation(installation);
     }
 
+    @PutMapping("/client/{contractNumber}")
     public void saveClient(String contractNumber, String name, String surname, String streetName, String buildingNumber, String flatNumber, String numberPhone, String email){
         Client client = new Client();
         client.setContractNumber(contractNumber);
@@ -140,7 +146,7 @@ public class ResCon {
         client.setEmail(email);
         clientService.addClient(client);
     }
-
+    @PutMapping("/client/update/{contractNumber}")
     public void updateClient(String chosenClientId,String contractNumber,String name, String surname, String streetName, String buildingNumber, String flatNumber, String email, String numberPhone) {
         List<Client> clientList = clientService.getAll();
         Optional<Client> clientOptional = clientList

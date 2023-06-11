@@ -42,6 +42,9 @@ public class ClientUI extends VerticalLayout{
 
     @PostConstruct
     public void init(){
+
+        setSizeFull();
+
         if(LoginToken.token == 0){
             Notification.show("Zaloguj się!");
             LoginToken.token = 0;
@@ -73,6 +76,8 @@ public class ClientUI extends VerticalLayout{
                 clientButton.getUI().ifPresent(ui ->
                         ui.navigate("/client"));
             });
+
+            clientButton.setClassName("buttonactive");
 
             Button installationButton = new Button("Dodaj montaż");
             installationButton.setClassName("button");
@@ -148,6 +153,9 @@ public class ClientUI extends VerticalLayout{
         Grid<Client> clientGrid = new Grid<>(Client.class, false);
         Editor<Client> editor = clientGrid.getEditor();
 
+        //nowe dodane
+        clientGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+
         Text chosenClientId = new Text("");
 
         clientGrid.setClassName("clientGrid");
@@ -178,15 +186,15 @@ public class ClientUI extends VerticalLayout{
         TextField contractNumberField = new TextField();
         contractNumberField.setWidthFull();
         binder.forField(contractNumberField)
-                        .asRequired("Nie może być puste")
-                                .withStatusLabel(contractNumberValidationMessage)
-                                        .bind(Client::getContractNumber, Client::setContractNumber);
+                .asRequired("Pole numer umowy nie może być puste")
+                .withStatusLabel(contractNumberValidationMessage)
+                .bind(Client::getContractNumber, Client::setContractNumber);
         contractNumberColumn.setEditorComponent(contractNumberField);
 
         TextField nameField = new TextField();
         nameField.setWidthFull();
         binder.forField(nameField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole imię nie może być puste")
                 .withStatusLabel(nameValidationMessage)
                 .bind(Client::getName, Client::setName);
         nameColumn.setEditorComponent(nameField);
@@ -194,7 +202,7 @@ public class ClientUI extends VerticalLayout{
         TextField surnameField = new TextField();
         surnameField.setWidthFull();
         binder.forField(surnameField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole nazwisko nie może być puste")
                 .withStatusLabel(surnameValidationMessage)
                 .bind(Client::getSurname, Client::setSurname);
         surnameColumn.setEditorComponent(surnameField);
@@ -202,7 +210,7 @@ public class ClientUI extends VerticalLayout{
         TextField streetNameField = new TextField();
         streetNameField.setWidthFull();
         binder.forField(streetNameField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole ulica nie może być puste")
                 .withStatusLabel(streetNameValidationMessage)
                 .bind(Client::getStreetName, Client::setStreetName);
         streetNameColumn.setEditorComponent(streetNameField);
@@ -210,7 +218,7 @@ public class ClientUI extends VerticalLayout{
         TextField buildingNumberField = new TextField();
         buildingNumberField.setWidthFull();
         binder.forField(buildingNumberField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole numer budynku nie może być puste")
                 .withStatusLabel(buildingNumberValidationMessage)
                 .bind(Client::getBuildingNumber, Client::setBuildingNumber);
         buildingNumberColumn.setEditorComponent(buildingNumberField);
@@ -218,7 +226,7 @@ public class ClientUI extends VerticalLayout{
         TextField flatNumberField = new TextField();
         flatNumberField.setWidthFull();
         binder.forField(flatNumberField)
-                .asRequired("Nie może być puste")
+//                .asRequired("Nie może być puste")
                 .withStatusLabel(flatNumberValidationMessage)
                 .bind(Client::getFlatNumber, Client::setFlatNumber);
         flatNumberColumn.setEditorComponent(flatNumberField);
@@ -226,7 +234,7 @@ public class ClientUI extends VerticalLayout{
         TextField emailField = new TextField();
         emailField.setWidthFull();
         binder.forField(emailField)
-                .asRequired("Nie może być puste")
+//                .asRequired("Nie może być puste")
                 .withStatusLabel(emailValidationMessage)
                 .bind(Client::getEmail, Client::setEmail);
         emailColumn.setEditorComponent(emailField);
@@ -234,7 +242,7 @@ public class ClientUI extends VerticalLayout{
         TextField numberPhoneField = new TextField();
         numberPhoneField.setWidthFull();
         binder.forField(numberPhoneField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole telefon nie może być puste")
                 .withStatusLabel(numberPhoneValidationMessage)
                 .bind(Client::getNumberPhone, Client::setNumberPhone);
         numberPhoneColumn.setEditorComponent(numberPhoneField);
@@ -314,8 +322,8 @@ public class ClientUI extends VerticalLayout{
         Button addClientButton = new Button("Dodaj nowego klienta");
         addClientButton.setClassName("addClientButton");
         addClientButton.addClickListener(btn-> {
-           addClientButton.getUI().ifPresent(ui ->
-                   ui.navigate("/clientAdd"));
+            addClientButton.getUI().ifPresent(ui ->
+                    ui.navigate("/clientAdd"));
         });
 
         horizontalSearchClientLayout.add(addClientButton, resetButton);

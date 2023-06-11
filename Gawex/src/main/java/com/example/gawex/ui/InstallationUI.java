@@ -16,6 +16,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -57,6 +58,11 @@ public class InstallationUI extends VerticalLayout {
     @PostConstruct
     public void init(){
 
+
+
+
+        setSizeFull();
+
         if(LoginToken.token == 0){
             Notification.show("Zaloguj się!");
             LoginToken.token = 0;
@@ -94,6 +100,8 @@ public class InstallationUI extends VerticalLayout {
                 installationButton.getUI().ifPresent(ui ->
                         ui.navigate("/installation"));
             });
+
+            installationButton.setClassName("buttonactive");
 
             Button failureButton = new Button("Dodaj awarię");
             failureButton.setClassName("button");
@@ -146,14 +154,17 @@ public class InstallationUI extends VerticalLayout {
 
         TextField contractNumberField = new TextField("Numer umowy");
         contractNumberField.setClassName("contractNumberField");
+        contractNumberField.setHelperText("Obowiązkowe");
         contractNumberField.getElement().setAttribute("theme", Lumo.DARK);
 
         TextField nameField = new TextField("Imię");
         nameField.setClassName("nameField");
+        nameField.setHelperText("Obowiązkowe");
         nameField.getElement().setAttribute("theme", Lumo.DARK);
 
         TextField surnameField = new TextField("Nazwisko");
         surnameField.setClassName("surnameField");
+        surnameField.setHelperText("Obowiązkowe");
         surnameField.getElement().setAttribute("theme", Lumo.DARK);
 
         horizontalDataLayout.add(contractNumberField,nameField,surnameField);
@@ -164,10 +175,12 @@ public class InstallationUI extends VerticalLayout {
 
         TextField streetNameField = new TextField("Ulica");
         streetNameField.setClassName("streetNameField");
+        streetNameField.setHelperText("Obowiązkowe");
         streetNameField.getElement().setAttribute("theme", Lumo.DARK);
 
         TextField buildingNumberField = new TextField("Numer budynku");
         buildingNumberField.setClassName("buildingNumberField");
+        buildingNumberField.setHelperText("Obowiązkowe");
         buildingNumberField.getElement().setAttribute("theme", Lumo.DARK);
 
         TextField flatNumberField = new TextField("Numer lokalu");
@@ -182,6 +195,7 @@ public class InstallationUI extends VerticalLayout {
 
         TextField numberPhoneField = new TextField("Numer telefonu");
         numberPhoneField.setClassName("streetNameField");
+        numberPhoneField.setHelperText("Obowiązkowe");
         numberPhoneField.getElement().setAttribute("theme", Lumo.DARK);
 
         Checkbox isBuildingCheckbox = new Checkbox("Awaria na budynku");
@@ -208,11 +222,13 @@ public class InstallationUI extends VerticalLayout {
         DatePicker datePicker = new DatePicker("Wybierz datę montażu");
         datePicker.setI18n(singleFormatI18n);
         datePicker.setClassName("datePicker");
+        datePicker.setHelperText("Obowiązkowe");
         datePicker.setI18n(new DatePicker.DatePickerI18n().setFirstDayOfWeek(1));
 
         TimePicker timePicker = new TimePicker();
         timePicker.setLabel("Wybierz godzinę montażu");
         timePicker.setClassName("timePicker");
+        timePicker.setHelperText("Obowiązkowe");
         timePicker.setStep(Duration.ofMinutes(30));
         timePicker.setMinTime(LocalTime.of(8, 0));
         timePicker.setMaxTime(LocalTime.of(16, 0));
@@ -224,6 +240,7 @@ public class InstallationUI extends VerticalLayout {
 
         ComboBox<String> typeInstallationComboBox = new ComboBox<>("Typ montażu");
         typeInstallationComboBox.setClassName("typeInstallationComboBox");
+        typeInstallationComboBox.setHelperText("Obowiązkowe");
         typeInstallationComboBox.setItems(typeInstallationService.getTypeInstallation());
 
         Button addInstallationButton = new Button("Dodaj montaż");

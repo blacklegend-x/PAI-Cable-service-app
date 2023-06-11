@@ -10,6 +10,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
@@ -17,6 +18,7 @@ import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.timepicker.TimePicker;
@@ -57,6 +59,8 @@ public class CalendarInstallationUI extends VerticalLayout {
 
     @PostConstruct
     public void init(){
+
+        setSizeFull();
 
         if(LoginToken.token == 0){
             Notification.show("Zaloguj się!");
@@ -111,6 +115,8 @@ public class CalendarInstallationUI extends VerticalLayout {
                         ui.navigate("/calendarInstallation"));
             });
 
+            calendarInstallationButton.setClassName("buttonactive");
+
             Button calendarFailureButton = new Button("Awarie");
             calendarFailureButton.setClassName("button");
             calendarFailureButton.addClickListener(btn -> {
@@ -164,10 +170,16 @@ public class CalendarInstallationUI extends VerticalLayout {
         Grid<Installation> installationGrid = new Grid<>(Installation.class, false);
         Editor<Installation> editor = installationGrid.getEditor();
 
+        //nowe dodane
+        installationGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+//        installationGrid.setAllRowsVisible(true);
+//        installationGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        //
+
         Text chosenInstallationId = new Text("");
 
         installationGrid.setClassName("installationGrid");
-        Grid.Column<Installation> contractNumberColumn = installationGrid.addColumn(Installation::getContractNumber).setHeader("umowa").setSortable(true).setResizable(true);
+        Grid.Column<Installation> contractNumberColumn = installationGrid.addColumn(Installation::getContractNumber).setHeader("Umowa").setSortable(true);
         Grid.Column<Installation> nameColumn = installationGrid.addColumn(Installation::getName).setHeader("Imię").setSortable(true);
         Grid.Column<Installation> surnameColumn = installationGrid.addColumn(Installation::getSurname).setHeader("Nazwisko").setSortable(true);
         Grid.Column<Installation> streetNameColumn = installationGrid.addColumn(Installation::getStreetName).setHeader("Ulica").setSortable(true);
@@ -182,7 +194,7 @@ public class CalendarInstallationUI extends VerticalLayout {
 
         Grid.Column<Installation> editColumn =  installationGrid.addComponentColumn(installation -> {
             Button editButton = new Button("Edytuj");
-            editButton.addClickListener(e->{
+            editButton.addClickListener(e -> {
                 if (editor.isOpen())
                     editor.cancel();
                 installationGrid.getEditor().editItem(installation);
@@ -191,6 +203,8 @@ public class CalendarInstallationUI extends VerticalLayout {
             });
             return editButton;
         });
+//        }).setAutoWidth(true).setFlexGrow(1);
+
 
         Binder<Installation> binder = new Binder<>(Installation.class);
         editor.setBinder(binder);
@@ -199,7 +213,7 @@ public class CalendarInstallationUI extends VerticalLayout {
         TextField contractNumberField = new TextField();
         contractNumberField.setWidthFull();
         binder.forField(contractNumberField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole numer umowy nie może być puste")
                 .withStatusLabel(contractNumberValidationMessage)
                 .bind(Installation::getContractNumber, Installation::setContractNumber);
         contractNumberColumn.setEditorComponent(contractNumberField);
@@ -207,7 +221,7 @@ public class CalendarInstallationUI extends VerticalLayout {
         TextField nameField = new TextField();
         nameField.setWidthFull();
         binder.forField(nameField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole imię nie może być puste")
                 .withStatusLabel(nameValidationMessage)
                 .bind(Installation::getName, Installation::setName);
         nameColumn.setEditorComponent(nameField);
@@ -215,7 +229,7 @@ public class CalendarInstallationUI extends VerticalLayout {
         TextField surnameField = new TextField();
         surnameField.setWidthFull();
         binder.forField(surnameField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole nazwisko nie może być puste")
                 .withStatusLabel(surnameValidationMessage)
                 .bind(Installation::getSurname, Installation::setSurname);
         surnameColumn.setEditorComponent(surnameField);
@@ -223,7 +237,7 @@ public class CalendarInstallationUI extends VerticalLayout {
         TextField streetNameField = new TextField();
         streetNameField.setWidthFull();
         binder.forField(streetNameField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole ulica nie może być puste")
                 .withStatusLabel(streetNameValidationMessage)
                 .bind(Installation::getStreetName, Installation::setStreetName);
         streetNameColumn.setEditorComponent(streetNameField);
@@ -231,7 +245,7 @@ public class CalendarInstallationUI extends VerticalLayout {
         TextField buildingNumberField = new TextField();
         buildingNumberField.setWidthFull();
         binder.forField(buildingNumberField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole numer budynku nie może być puste")
                 .withStatusLabel(buildingNumberValidationMessage)
                 .bind(Installation::getBuildingNumber, Installation::setBuildingNumber);
         buildingNumberColumn.setEditorComponent(buildingNumberField);
@@ -247,7 +261,7 @@ public class CalendarInstallationUI extends VerticalLayout {
         TextField numberPhoneField = new TextField();
         numberPhoneField.setWidthFull();
         binder.forField(numberPhoneField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole telefon nie może być puste")
                 .withStatusLabel(numberPhoneValidationMessage)
                 .bind(Installation::getNumberPhone, Installation::setNumberPhone);
         numberPhoneColumn.setEditorComponent(numberPhoneField);
@@ -256,16 +270,17 @@ public class CalendarInstallationUI extends VerticalLayout {
         typeInstallationComboBox.setItems(typeInstallationService.getTypeInstallation());
         typeInstallationComboBox.setWidthFull();
         binder.forField(typeInstallationComboBox)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole typ instalacji nie może być puste")
                 .withStatusLabel(typeValidationMessage)
                 .bind(Installation::getTypeInstallation, Installation::setTypeInstallation);
         typeInstallationColumn.setEditorComponent(typeInstallationComboBox);
+//        typeInstallationColumn.setAutoWidth(true).setFlexGrow(1);
 
         ComboBox<String> isBuildingInstallationComboBox = new ComboBox<>();
         isBuildingInstallationComboBox.setItems("tak","nie");
         isBuildingInstallationComboBox.setWidthFull();
         binder.forField(isBuildingInstallationComboBox)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole czy budynek nie może być puste")
                 .withStatusLabel(typeValidationMessage)
                 .bind(Installation::getIsBuilding, Installation::setIsBuilding);
         isBuldingColumn.setEditorComponent(isBuildingInstallationComboBox);
@@ -275,10 +290,11 @@ public class CalendarInstallationUI extends VerticalLayout {
         statusInstallationComboBox.setItems("Przyjęto", "W realizacji", "Zrealizowano");
         statusInstallationComboBox.setWidthFull();
         binder.forField(statusInstallationComboBox)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole status nie może być puste")
                 .withStatusLabel(typeValidationMessage)
                 .bind(Installation::getStatus, Installation::setStatus);
         statusColumn.setEditorComponent(statusInstallationComboBox);
+
 
 
         DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
@@ -289,7 +305,7 @@ public class CalendarInstallationUI extends VerticalLayout {
         datePickerField.setI18n(new DatePicker.DatePickerI18n().setFirstDayOfWeek(1));
         datePickerField.setWidthFull();
         binder.forField(datePickerField).withConverter(new LocalDateToSqlDateConverter())
-                .asRequired("Nie może być puste")
+                .asRequired("Pole data instalacji nie może być puste")
                 .withStatusLabel(dateValidationMessage)
                 .bind(Installation::getDate,Installation::setDate);
         dateColumn.setEditorComponent(datePickerField);
@@ -302,7 +318,7 @@ public class CalendarInstallationUI extends VerticalLayout {
         timePickerField.setMaxTime(LocalTime.of(16, 0));
         timePickerField.setWidthFull();
         binder.forField(timePickerField).withConverter(new LocalTimeToSqlTimeConverter())
-                .asRequired("Nie może być puste")
+                .asRequired("Pole czas instalacji nie może być puste")
                 .withStatusLabel(timeValidationMessage)
                 .bind(Installation::getTime,Installation::setTime);
         timeColumn.setEditorComponent(timePickerField);

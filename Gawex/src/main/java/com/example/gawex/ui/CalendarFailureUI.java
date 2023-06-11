@@ -19,8 +19,10 @@ import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.Binder;
@@ -53,6 +55,11 @@ public class CalendarFailureUI extends VerticalLayout {
     @PostConstruct
     public void init() {
 
+        setSizeFull();
+        setPadding(true);
+        setSpacing(true);
+
+
         if (LoginToken.token == 0) {
             Notification.show("Zaloguj się!");
             LoginToken.token = 0;
@@ -61,13 +68,16 @@ public class CalendarFailureUI extends VerticalLayout {
 
         setClassName("calendarFailureUI");
 
+
         getElement().setAttribute("theme", Lumo.DARK);
+
 
         //menu
         {
             HorizontalLayout horizontalMenuLayout = new HorizontalLayout();
             horizontalMenuLayout.setClassName("horizontalMenuLayout");
             add(horizontalMenuLayout);
+
 
             HorizontalLayout horizontalMenuLogoLayout = new HorizontalLayout();
             horizontalMenuLogoLayout.setClassName("horizontalMenuLogoLayout");
@@ -112,6 +122,8 @@ public class CalendarFailureUI extends VerticalLayout {
                         ui.navigate("/calendarFailure"));
             });
 
+            calendarFailureButton.setClassName("buttonactive");
+
             Button logoutButton = new Button("Wyloguj");
             logoutButton.setClassName("button");
             logoutButton.addClickListener(btn -> {
@@ -124,10 +136,12 @@ public class CalendarFailureUI extends VerticalLayout {
 
         }
 
+
         //wyszukiwarka
         HorizontalLayout horizontalSearchFailureLayout = new HorizontalLayout();
         horizontalSearchFailureLayout.setClassName("horizontalSearchFailureLayout");
         add(horizontalSearchFailureLayout);
+
 
         TextField searchInGrid = new TextField();
         searchInGrid.setPlaceholder("Wyszukaj");
@@ -140,6 +154,7 @@ public class CalendarFailureUI extends VerticalLayout {
         HorizontalLayout horizontalGridFailureLayout = new HorizontalLayout();
         horizontalGridFailureLayout.setClassName("horizontalGridFailureLayout");
         add(horizontalGridFailureLayout);
+
 
         ValidationMessage contractNumberValidationMessage = new ValidationMessage();
         ValidationMessage nameValidationMessage = new ValidationMessage();
@@ -158,10 +173,13 @@ public class CalendarFailureUI extends VerticalLayout {
         Grid<Failure> failureGrid = new Grid<>(Failure.class, false);
         Editor<Failure> editor = failureGrid.getEditor();
 
+        //nowe dodane
+        failureGrid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+
         Text chosenFailureId = new Text("");
 
         failureGrid.setClassName("failureGrid");
-        Grid.Column<Failure> contractNumberColumn = failureGrid.addColumn(Failure::getContractNumber).setHeader("umowa").setSortable(true).setResizable(true);
+        Grid.Column<Failure> contractNumberColumn = failureGrid.addColumn(Failure::getContractNumber).setHeader("Umowa").setSortable(true);
         Grid.Column<Failure> nameColumn = failureGrid.addColumn(Failure::getName).setHeader("Imię").setSortable(true);
         Grid.Column<Failure> surnameColumn = failureGrid.addColumn(Failure::getSurname).setHeader("Nazwisko").setSortable(true);
         Grid.Column<Failure> streetNameColumn = failureGrid.addColumn(Failure::getStreetName).setHeader("Ulica").setSortable(true);
@@ -169,9 +187,9 @@ public class CalendarFailureUI extends VerticalLayout {
         Grid.Column<Failure> flatNumberColumn = failureGrid.addColumn(Failure::getFlatNumber).setHeader("Numer lokalu").setSortable(true);
         Grid.Column<Failure> numberPhoneColumn = failureGrid.addColumn(Failure::getNumberPhone).setHeader("Telefon").setSortable(true);
         Grid.Column<Failure> isBuldingColumn = failureGrid.addColumn(Failure::getIsBuilding).setHeader("Czy budynek").setSortable(true);
-        Grid.Column<Failure> dateColumn = failureGrid.addColumn(Failure::getDate).setHeader("Data montażu").setSortable(true);
-        Grid.Column<Failure> timeColumn = failureGrid.addColumn(Failure::getTime).setHeader("Czas montażu").setSortable(true);
-        Grid.Column<Failure> typeFailureColumn = failureGrid.addColumn(Failure::getTypeFailure).setHeader("Typ montażu").setSortable(true);
+        Grid.Column<Failure> dateColumn = failureGrid.addColumn(Failure::getDate).setHeader("Data naprawy").setSortable(true);
+        Grid.Column<Failure> timeColumn = failureGrid.addColumn(Failure::getTime).setHeader("Czas naprawy").setSortable(true);
+        Grid.Column<Failure> typeFailureColumn = failureGrid.addColumn(Failure::getTypeFailure).setHeader("Typ naprawy").setSortable(true);
         Grid.Column<Failure> statusColumn = failureGrid.addColumn(Failure::getStatus).setHeader("Status").setSortable(true);
 
 
@@ -185,7 +203,8 @@ public class CalendarFailureUI extends VerticalLayout {
 
             });
             return editButton;
-        });
+        }).setAutoWidth(true).setFlexGrow(1);
+
 
         Binder<Failure> binder = new Binder<>(Failure.class);
         editor.setBinder(binder);
@@ -194,7 +213,7 @@ public class CalendarFailureUI extends VerticalLayout {
         TextField contractNumberField = new TextField();
         contractNumberField.setWidthFull();
         binder.forField(contractNumberField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole numer umowy nie może być puste")
                 .withStatusLabel(contractNumberValidationMessage)
                 .bind(Failure::getContractNumber, Failure::setContractNumber);
         contractNumberColumn.setEditorComponent(contractNumberField);
@@ -202,7 +221,7 @@ public class CalendarFailureUI extends VerticalLayout {
         TextField nameField = new TextField();
         nameField.setWidthFull();
         binder.forField(nameField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole imię nie może być puste")
                 .withStatusLabel(nameValidationMessage)
                 .bind(Failure::getName, Failure::setName);
         nameColumn.setEditorComponent(nameField);
@@ -210,7 +229,7 @@ public class CalendarFailureUI extends VerticalLayout {
         TextField surnameField = new TextField();
         surnameField.setWidthFull();
         binder.forField(surnameField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole nazwisko może być puste")
                 .withStatusLabel(surnameValidationMessage)
                 .bind(Failure::getSurname, Failure::setSurname);
         surnameColumn.setEditorComponent(surnameField);
@@ -218,7 +237,7 @@ public class CalendarFailureUI extends VerticalLayout {
         TextField streetNameField = new TextField();
         streetNameField.setWidthFull();
         binder.forField(streetNameField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole ulica może być puste")
                 .withStatusLabel(streetNameValidationMessage)
                 .bind(Failure::getStreetName, Failure::setStreetName);
         streetNameColumn.setEditorComponent(streetNameField);
@@ -226,7 +245,7 @@ public class CalendarFailureUI extends VerticalLayout {
         TextField buildingNumberField = new TextField();
         buildingNumberField.setWidthFull();
         binder.forField(buildingNumberField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole numer budynku nie może być puste")
                 .withStatusLabel(buildingNumberValidationMessage)
                 .bind(Failure::getBuildingNumber, Failure::setBuildingNumber);
         buildingNumberColumn.setEditorComponent(buildingNumberField);
@@ -242,7 +261,7 @@ public class CalendarFailureUI extends VerticalLayout {
         TextField numberPhoneField = new TextField();
         numberPhoneField.setWidthFull();
         binder.forField(numberPhoneField)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole telefon nie może być puste")
                 .withStatusLabel(numberPhoneValidationMessage)
                 .bind(Failure::getNumberPhone, Failure::setNumberPhone);
         numberPhoneColumn.setEditorComponent(numberPhoneField);
@@ -251,16 +270,17 @@ public class CalendarFailureUI extends VerticalLayout {
         typeFailureComboBox.setItems(typeFailureService.getTypeFailure());
         typeFailureComboBox.setWidthFull();
         binder.forField(typeFailureComboBox)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole typ awarii może być puste")
                 .withStatusLabel(typeValidationMessage)
                 .bind(Failure::getTypeFailure, Failure::setTypeFailure);
         typeFailureColumn.setEditorComponent(typeFailureComboBox);
+        typeFailureColumn.setAutoWidth(true).setFlexGrow(1);
 
         ComboBox<String> isBuildingFailureComboBox = new ComboBox<>();
         isBuildingFailureComboBox.setItems("tak","nie");
         isBuildingFailureComboBox.setWidthFull();
         binder.forField(isBuildingFailureComboBox)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole czy budynek nie może być puste")
                 .withStatusLabel(typeValidationMessage)
                 .bind(Failure::getIsBuilding, Failure::setIsBuilding);
         isBuldingColumn.setEditorComponent(isBuildingFailureComboBox);
@@ -269,7 +289,7 @@ public class CalendarFailureUI extends VerticalLayout {
         statusFailureComboBox.setItems("Przyjęto", "W realizacji", "Zrealizowano");
         statusFailureComboBox.setWidthFull();
         binder.forField(statusFailureComboBox)
-                .asRequired("Nie może być puste")
+                .asRequired("Pole status nie może być puste")
                 .withStatusLabel(typeValidationMessage)
                 .bind(Failure::getStatus, Failure::setStatus);
         statusColumn.setEditorComponent(statusFailureComboBox);
@@ -283,7 +303,7 @@ public class CalendarFailureUI extends VerticalLayout {
         datePickerField.setI18n(new DatePicker.DatePickerI18n().setFirstDayOfWeek(1));
         datePickerField.setWidthFull();
         binder.forField(datePickerField).withConverter(new LocalDateToSqlDateConverter())
-                .asRequired("Nie może być puste")
+                .asRequired("Pole data nie może być puste")
                 .withStatusLabel(dateValidationMessage)
                 .bind(Failure::getDate,Failure::setDate);
         dateColumn.setEditorComponent(datePickerField);
@@ -295,7 +315,7 @@ public class CalendarFailureUI extends VerticalLayout {
         timePickerField.setMaxTime(LocalTime.of(16, 0));
         timePickerField.setWidthFull();
         binder.forField(timePickerField).withConverter(new LocalTimeToSqlTimeConverter())
-                .asRequired("Nie może być puste")
+                .asRequired("Pole godzina nie może być puste")
                 .withStatusLabel(timeValidationMessage)
                 .bind(Failure::getTime,Failure::setTime);
         timeColumn.setEditorComponent(timePickerField);
@@ -416,6 +436,7 @@ public class CalendarFailureUI extends VerticalLayout {
 
         horizontalSearchFailureLayout.add(streetComboBox, typeComboBox, resetButton);
 
+
         //TEXTBOX
         searchInGrid.setValueChangeMode(ValueChangeMode.EAGER);
         searchInGrid.addValueChangeListener(e -> dataView.refreshAll());
@@ -443,7 +464,9 @@ public class CalendarFailureUI extends VerticalLayout {
 
         horizontalGridFailureLayout.add(failureGrid);
 
+
     }
+
 
     private boolean matchesTerm(String value, String searchTerm) {
         return searchTerm == null || searchTerm.isEmpty()
